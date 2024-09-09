@@ -56,32 +56,6 @@ def populate_chroma_db(
     )
     vectordb.persist()
 
-def populate_qdrant_ddb(
-        embeddings: Embeddings,
-        docs: List[Document],
-) -> None:
-    host = "localhost"
-    port = 6333
-    collection_name = "llm_collection"
-
-    # Initialize Qdrant client
-    client = QdrantClient(host=host, port=port, timeout=60)  # Increased timeout
-
-    # Generate embeddings for each document chunk
-    vectors = embeddings.embed_documents([doc.page_content for doc in docs])
-
-    # Prepare points to upsert
-    points = [
-        PointStruct(id=str(uuid.uuid4()), vector=vector, payload={"meta_data": "1", "page_content": doc.page_content})
-        for doc, vector in zip(docs, vectors)
-    ]
-
-    for point in points:
-        client.upsert(
-            collection_name=collection_name,
-            points=[point],
-        )
-
 
 def main():
     embeddings = get_embedding_function()
@@ -90,10 +64,6 @@ def main():
         max_depth=2,
         embeddings=embeddings
     )
-    # populate_qdrant_ddb(
-    #     embeddings=embeddings,
-    #     docs=docs
-    # )
     populate_chroma_db(
         docs=docs,
         embeddings=embeddings
