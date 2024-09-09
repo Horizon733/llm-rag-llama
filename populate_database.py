@@ -8,9 +8,6 @@ from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 
 from bs4 import BeautifulSoup as Soup
-from qdrant_client import QdrantClient
-from qdrant_client.grpc import PointStruct
-from qdrant_client.http.exceptions import ResponseHandlingException
 
 from get_embedding_function import get_embedding_function
 
